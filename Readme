@@ -3,7 +3,7 @@ Deploy a simple web app image and update it with k8s clt
 
 Create an image 
 
-```bash
+```
 docker build . -t bbest2020/k8s_sample_webapp
 ```
 
@@ -55,12 +55,10 @@ curl <cluser ip>:3000;echo
 
 Result:
 ```
-# curl 10.98.138.73:3000;echo
-Hello from web-dep-5c5f8b8554-2fl7k
-# curl 10.98.138.73:3000;echo
-Hello from web-dep-5c5f8b8554-mn54n
+curl 10.98.138.73:3000;echo
+curl 10.98.138.73:3000;echo
 ```
-==> Differnt pods serve different requests
+Differnt pods serve different requests
 
 Lets create a cluster IP available from outside 
 
@@ -101,8 +99,6 @@ Update image version in our deployment
 we want to rollout the new upodate smothly in the production without any interuption
 RollingUpdate strategy means new pods will be created with new images while old pods will be still running, so pods will be replaced one by one 
 
-
-
 Build a new image 
 
 ```
@@ -115,11 +111,9 @@ Deploy the new image
 
 ```
 kubectl set image deployment/web-dep k8s-sample-webapp-zz5fz=bbest2020/k8s_sample_webapp:2.0.0
- kubectl rollout status deploy web-dep 
+kubectl rollout status deploy web-dep 
 ```
-
 k8s-sample-webapp-zz5fz is the Pod template container to get it execute 
-
 ```
- minikube service web-dep 
+minikube service web-dep 
 ```
