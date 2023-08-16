@@ -1,0 +1,119 @@
+ Create an image 
+
+ ```bash
+ docker build . -t bbest2020/k8s_sample_webapp
+```
+
+Check image creation
+
+```bash
+docker images | grep k8s
+```
+
+Push the image to docker hub
+
+```bash
+docker login
+docker push bbest2020/k8s_sample_webapp
+```
+
+Create a new deployment
+```bash
+kubectl create deployment web-dep --image=bbest2020/k8s_sample_webapp
+```
+
+Create a Cluster IP
+
+```bash
+kubectl expose deployment web-dep --port=3000 
+```
+Check service creation
+
+```bash
+kubectl get svc
+```
+The cluster IP is only available inside the cluster
+
+From inside minicube docker terminal execute
+
+```bash
+curl <cluser ip>:3000;echo
+```
+Scale our deployment(Increase the nbre of pods)
+```bash
+kubectl scale deployment web-dep --replicas=5
+kubectl get pods
+```
+Execute the following several times
+
+```bash
+curl <cluser ip>:3000;echo
+```
+
+Result:
+```
+# curl 10.98.138.73:3000;echo
+Hello from web-dep-5c5f8b8554-2fl7k
+# curl 10.98.138.73:3000;echo
+Hello from web-dep-5c5f8b8554-mn54n
+```
+==> Differnt pods serve different requests
+
+Lets create a cluster IP available from outside 
+
+```bash
+delete svc web-dep
+```
+
+Modify type of the service
+
+```bash
+kubectl expose deployment web-dep --type=NodePort --port=3000 
+```
+
+ 
+Opening kubernetes service in default browser...
+
+```bash
+minikube service web-dep 
+``````
+
+Get the url 
+```bash
+minikube service web-dep --url
+```
+Result ==> http://127.0.0.1:63260
+
+
+LoadBalancer
+
+```bash
+kubectl expose deployment web-dep --type=LoadBalancer --port=3000 
+minikube service web-dep 
+```
+
+* <b>Update image version in our deployment</b>
+we want to rollout the new upodate smothly in the production without any interuption
+RollingUpdate strategy means new pods will be created with new images while old pods will be still running, so pods will be replaced one by one 
+
+
+
+Build a new image 
+
+```bash
+ docker build . -t bbest2020/k8s_sample_webapp:2.0.0
+ docker push bbest2020/k8s_sample_webapp:2.0.0
+```
+
+
+Deploy the new image 
+
+```bash
+kubectl set image deployment/web-dep k8s-sample-webapp-zz5fz=bbest2020/k8s_sample_webapp:2.0.0
+ kubectl rollout status deploy web-dep 
+```
+k8s-sample-webapp-zz5fz is the Pod template container to get it execute 
+
+```bash
+ minikube service web-dep 
+```
