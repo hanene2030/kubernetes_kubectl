@@ -3,7 +3,7 @@ Deploy a simple web app image and update it with k8s clt
 
 Create an image 
 
-```
+```bash
 docker build . -t bbest2020/k8s_sample_webapp
 ```
 
