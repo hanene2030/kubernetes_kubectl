@@ -4,53 +4,53 @@ Deploy a simple web app image and update it with k8s clt
  
  Create an image 
 
- ```console
+```
  docker build . -t bbest2020/k8s_sample_webapp
 ```
 
 Check image creation
 
-```console
+```
 docker images | grep k8s
 ```
 
-Push the image to docker hub
+Push the image to doc ker hub
 
-```console
+```
 docker login
 docker push bbest2020/k8s_sample_webapp
 ```
 
 Create a new deployment
-```console
+```
 kubectl create deployment web-dep --image=bbest2020/k8s_sample_webapp
 ```
 
 Create a Cluster IP
 
-```console
+```
 kubectl expose deployment web-dep --port=3000 
 ```
 Check service creation
 
-```console
+```
 kubectl get svc
 ```
 The cluster IP is only available inside the cluster
 
 From inside minicube docker terminal execute
 
-```console
+```
 curl <cluser ip>:3000;echo
 ```
 Scale our deployment(Increase the nbre of pods)
-```console
+```
 kubectl scale deployment web-dep --replicas=5
 kubectl get pods
 ```
 Execute the following several times
 
-```console
+```
 curl <cluser ip>:3000;echo
 ```
 
@@ -65,25 +65,25 @@ Hello from web-dep-5c5f8b8554-mn54n
 
 Lets create a cluster IP available from outside 
 
-```console
+```
 delete svc web-dep
 ```
 
 Modify type of the service
 
-```console
+```
 kubectl expose deployment web-dep --type=NodePort --port=3000 
 ```
 
  
 Opening kubernetes service in default browser...
 
-```console
+```
 minikube service web-dep 
-``````
+```
 
 Get the url 
-```console
+```
 minikube service web-dep --url
 ```
 Result ==> http://127.0.0.1:63260
@@ -91,12 +91,14 @@ Result ==> http://127.0.0.1:63260
 
 LoadBalancer
 
-```console
+```
 kubectl expose deployment web-dep --type=LoadBalancer --port=3000 
 minikube service web-dep 
 ```
 
-* <b>Update image version in our deployment</b>
+Update image version in our deployment
+
+
 we want to rollout the new upodate smothly in the production without any interuption
 RollingUpdate strategy means new pods will be created with new images while old pods will be still running, so pods will be replaced one by one 
 
@@ -104,7 +106,7 @@ RollingUpdate strategy means new pods will be created with new images while old 
 
 Build a new image 
 
-```console
+```
  docker build . -t bbest2020/k8s_sample_webapp:2.0.0
  docker push bbest2020/k8s_sample_webapp:2.0.0
 ```
@@ -112,12 +114,13 @@ Build a new image
 
 Deploy the new image 
 
-```console
+```
 kubectl set image deployment/web-dep k8s-sample-webapp-zz5fz=bbest2020/k8s_sample_webapp:2.0.0
  kubectl rollout status deploy web-dep 
 ```
+
 k8s-sample-webapp-zz5fz is the Pod template container to get it execute 
 
-```console
+```
  minikube service web-dep 
 ```
