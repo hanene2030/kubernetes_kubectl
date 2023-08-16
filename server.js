@@ -1,5 +1,5 @@
 //copied from https://expressjs.com/en/starter/hello-world.html
-//Turo followed https://www.youtube.com/watch?v=d6WC5n9G_sM&t=2s
+//Tuto followed https://www.youtube.com/watch?v=d6WC5n9G_sM&t=2s
 
 const express = require('express')
 const app = express()
